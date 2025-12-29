@@ -2,23 +2,39 @@
 
 > 一个基于 Spring Boot 的轻量级美容店业务管理 Web 应用，支持客户管理、美容项目维护、服务登记、月度统计等简单功能。
 
-## 📌 功能特性
+#### 📌 功能特性
 
-- ✅ **客户管理**：新增、查看客户（姓名、性别、电话）
-- ✅ **美容项目管理**：维护项目名称与价格
-- ✅ **美容登记**：记录客户消费（自动关联客户与项目）
-- ✅ **统计报表**：
-  - 指定月份各项目服务次数
-  - 指定年份各客户到店次数
-  - **指定月份总收入**（前端可视化）
-- ✅ **数据安全**：
-  - 客户性别限制为 `男`/`女`（数据库 CHECK 约束 + 前端下拉）
-  - 数据库凭证通过**环境变量**注入（不硬编码）
-- ✅ **响应式 UI**：基于 Tailwind CSS，美观简洁，适配桌面与平板
+- ✅ **客户管理**：完整增删改查（CRUD），性别限制为 `男`/`女`
+
+- ✅ **美容项目管理**：完整增删改查（CRUD），支持价格调整
+
+- ✅ **美容登记**：选择客户与项目，自动记录服务时间与金额
+
+- ✅ **数据一致性保障**：
+
+  - 删除客户/项目时，若存在历史记录（`Appointment`），系统**拒绝删除**并提示
+
+  - 历史记录中的客户/项目名称通过 **JOIN 查询动态展示**，确保信息实时同步
+
+- ✅ **多维度统计报表**（基于 MySQL 存储过程）：
+
+  - 📊 **月份项目统计**：指定年月，统计各美容项目的消费次数
+
+  - 👥 **年度客户统计**：指定年份，统计每位客户的到店次数
+
+  - 💰 **月度收入统计**：指定年月，计算美容店总收入
+
+- ✅ **安全与体验**：
+
+  - 数据库凭证通过**环境变量注入**（不硬编码）
+
+  - 操作反馈使用 **Flash 消息**（成功/错误提示）
+
+  - 响应式 UI，基于 **Tailwind CSS**，美观简洁
 
 ---
 
-## 🛠️ 技术栈
+# 🛠️ 技术栈
 
 | 类别   | 技术                             |
 | ---- | ------------------------------ |
@@ -95,35 +111,42 @@ http://localhost:8080
 
 ```
 beauty-shop-web/
-├── src/main/java
-│   └── com/example/beautyshop
-│       ├── controller/      # Web 控制器（首页、统计、表单）
-│       ├── mapper/          # MyBatis Mapper 接口
-│       ├── model/           # 实体类（Customer, BeautyService, Appointment）
-│       └── BeautyShopApplication.java
+├── src/main/java/com/example/beautyshop
+│   ├── controller/
+│   │   ├── HomeController.java          # 首页
+│   │   ├── DataEntryController.java     # 新增表单
+│   │   ├── AdminController.java         # 客户/项目 CRUD
+│   │   └── StatTypeController.java      # 三类统计统一入口
+│   ├── mapper/                          # MyBatis 接口
+│   ├── model/                           # 实体类
+│   └── BeautyShopApplication.java
 ├── src/main/resources
-│   ├── mapper/     # MyBatis XML 映射文件
-│   ├── templates/          # Thymeleaf 页面（含 Tailwind UI）
-│   └── application.yml     # 配置文件（数据库 URL，凭证通过环境变量注入）
-├── docs/
-│   └── init_db.sql         # 数据库初始化脚本（建表+存储过程+测试数据）
-├── .gitignore              # 忽略敏感文件（如 run.ps1）
-├── pom.xml                 # Maven 依赖与插件
+│   ├── mapper/                          # MyBatis XML
+│   └── templates/
+│       ├── index.html                   # 首页
+│       ├── stats-type-selector.html     # 统计类型选择
+│       ├── stats-*.html                 # 三类统计结果页
+│       ├── admin/                       # 管理后台
+│       │   ├── customers.html
+│       │   ├── customer-edit.html
+│       │   ├── services.html
+│       │   └── service-edit.html
+│       └── ...                          # 其他表单页
+├── docs/init_db.sql                     # 数据库初始化脚本
+├── .gitignore
+├── pom.xml
 └── README.md
 ```
 
 ---
 
-## 🔐 安全最佳实践
+ 
 
-### 数据库凭证管理
+## 🔐 安全与最佳实践
 
-| 环境       | 方式                                |
-| -------- | --------------------------------- |
-| **本地开发** | PowerShell 临时环境变量（推荐）             |
-| **生产部署** | Docker `-e` 参数 / 服务器环境变量 / 密钥管理服务 |
-
-> 🚫 **禁止** 将密码写入 `application.yml` 或提交到 Git！
+- **数据库凭证**：通过 `$env:DB_USERNAME` / `$env:DB_PASSWORD` 传入，**绝不提交到 Git**
+- **敏感脚本**：`run.ps1`、`backup_db.ps1` 已加入 `.gitignore`
+- **删除保护**：利用 MySQL 外键约束 + 后端异常捕获 + Flash 消息，防止误删
 
 ### 示例：本地启动脚本（`run.ps1`）
 
@@ -176,12 +199,11 @@ docker run -e DB_USERNAME=root -e DB_PASSWORD=xxx -p 8080:8080 your-app
 
 ## 📝 开发者指南
 
-### 如何新增功能？
+- **新增管理功能**：扩展 `AdminController` + `templates/admin/xxx.html`
+- **新增统计**：创建新存储过程 + 新 Controller 方法 + 新 Thymeleaf 页面
+- **错误提示**：使用 `RedirectAttributes.addFlashAttribute("errorMsg", "...")`
 
-1. **新增实体** → 创建 `model/xxx.java`
-2. **新增表** → 更新 `init_db.sql`
-3. **新增页面** → 添加 `templates/xxx.html`（使用 Tailwind）
-4. **新增接口** → 编写 `controller` + `mapper`
+
 
 ### 常见问题
 

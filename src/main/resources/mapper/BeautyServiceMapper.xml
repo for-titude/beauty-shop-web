@@ -21,4 +21,16 @@
         VALUES (#{serviceName}, #{price})
     </insert>
 
+    <!-- 更新项目 -->
+    <update id="update">
+        UPDATE BeautyService
+        SET service_name = #{serviceName}, price = #{price}
+        WHERE service_id = #{serviceId}
+    </update>
+
+    <!-- 删除项目 -->
+    <delete id="deleteById">
+        DELETE FROM BeautyService WHERE service_id = #{serviceId}
+    </delete>
+
 </mapper>

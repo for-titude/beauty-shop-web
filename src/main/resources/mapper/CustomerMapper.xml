@@ -22,4 +22,16 @@
         VALUES (#{name}, #{gender}, #{phone})
     </insert>
 
+    <!-- 更新客户 -->
+    <update id="update">
+        UPDATE Customer
+        SET name = #{name}, gender = #{gender}, phone = #{phone}
+        WHERE customer_id = #{customerId}
+    </update>
+
+    <!-- 删除客户 -->
+    <delete id="deleteById">
+        DELETE FROM Customer WHERE customer_id = #{customerId}
+    </delete>
+
 </mapper>

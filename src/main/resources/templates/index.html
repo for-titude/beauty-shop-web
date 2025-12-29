@@ -29,11 +29,10 @@
 
     <!-- 快捷操作 -->
     <div class="mb-8 flex flex-wrap gap-3">
-        <a href="/customers/new" class="btn-primary">➕ 新增客户</a>
-        <a href="/services/new" class="btn-primary">➕ 新增美容项目</a>
         <a href="/appointments/new" class="btn-primary">➕ 新增美容登记</a>
-        <a th:href="@{/stats(year=${#temporals.createNow().year}, month=${#temporals.createNow().monthValue})}"
-           class="btn-primary">📊 本月统计</a>
+        <a href="/admin/customers" class="btn-primary">🛠️ 管理客户</a>
+        <a href="/admin/services" class="btn-primary">🛠️ 管理项目</a>
+        <a href="/stats/type" class="btn-primary">📊 统计类型</a>
     </div>
 
     <!-- 美容记录 -->

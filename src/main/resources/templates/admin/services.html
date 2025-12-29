@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>美容项目管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8b5cf6'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">💅 美容项目管理</h1>
+
+    <a href="/services/new" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded mb-4 inline-block">
+        ➕ 新增美容项目
+    </a>
+
+    <!-- 错误提示：存在历史记录无法删除 -->
+<!--    <div th:if="${param.error == 'has_records'}" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">-->
+<!--        ❗ 该美容项目已被使用，存在历史记录，无法删除。-->
+<!--    </div>-->
+    <!-- 使用 flash attribute: errorMsg -->
+    <div th:if="${errorMsg != null}" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        ❗ <span th:text="${errorMsg}"></span>
+    </div>
+
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">价格 (¥)</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr th:if="${services.empty}">
+                <td colspan="4" class="px-6 py-4 text-center text-gray-500">暂无美容项目</td>
+            </tr>
+            <tr th:each="s : ${services}" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${s.serviceId}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${s.serviceName}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium" th:text="${s.price}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <a th:href="@{/admin/services/{id}/edit(id=${s.serviceId})}"
+                       class="text-blue-600 hover:text-blue-900 mr-3">编辑</a>
+                    <form th:action="@{/admin/services/{id}/delete(id=${s.serviceId})}"
+                          method="post"
+                          onsubmit="return confirm('确定要删除此美容项目吗？\n注意：如果该项目已被使用，将无法删除。')"
+                          style="display:inline;">
+                        <button type="submit" class="text-red-600 hover:text-red-900">删除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6">
+        <a href="/" class="text-primary hover:underline">← 返回首页</a>
+    </div>
+</div>
+</body>
+</html>

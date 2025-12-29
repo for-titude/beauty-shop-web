@@ -9,4 +9,6 @@ import java.util.List;
 public interface BeautyServiceMapper {
     List<BeautyService> findAll();
     void insert(BeautyService service);
+    void update(BeautyService service); // 新增
+    void deleteById(Integer serviceId); // 新增
 }
