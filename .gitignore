@@ -1,0 +1,77 @@
+# =============== #
+#  Maven & Java   #
+# =============== #
+target/
+!target/classes/  # 一般不提交，但保留注释说明
+*.jar
+*.war
+*.ear
+
+# =============== #
+#  IDE Files      #
+# =============== #
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# =============== #
+#  OS Files       #
+# =============== #
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS (if shared)
+.DS_Store
+
+# =============== #
+#  Logs & Temp    #
+# =============== #
+logs/
+*.log
+temp/
+tmp/
+
+# =============== #
+#  Sensitive Files (CRITICAL!) #
+# =============== #
+# 数据库凭证脚本（绝对不要提交！）
+*.ps1
+*.bat
+.env
+.env.local
+
+# 数据库导出文件（通常不提交，除非是初始化脚本）
+# 如果你希望提交 INIT 脚本，请取消下面一行的注释
+# !docs/init_db.sql
+
+# 示例：只允许提交 docs/ 下的 init_db.sql，其他 SQL 忽略
+docs/*.sql
+!docs/init_db.sql
+
+# =============== #
+#  Backup Files   #
+# =============== #
+backup/
+*.bak
+*.sql.bak
+
+# =============== #
+#  Misc           #
+# =============== #
+.DS_Store
+*.swp
+*~

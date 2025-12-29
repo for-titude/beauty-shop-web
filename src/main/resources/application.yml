@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: beauty-shop-web
+  datasource:
+    url: jdbc:mysql://localhost:3306/beautyshopdb?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+    # 数据库账号密码，从环境变量中获取
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开启MyBatis日志
+
+server:
+  port: 8080

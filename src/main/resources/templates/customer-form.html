@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>新增客户</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="max-w-2xl mx-auto p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">➕ 新增客户</h1>
+
+    <form th:action="@{/customers}" th:object="${customer}" method="post"
+          class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-medium mb-2">姓名</label>
+            <input type="text" th:field="*{name}" required
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-medium mb-2">性别</label>
+            <select th:field="*{gender}" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">请选择</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-medium mb-2">电话（可选）</label>
+            <input type="text" th:field="*{phone}"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+
+        <div class="flex gap-3">
+            <button type="submit" class="bg-primary hover:bg-purple-700 text-white font-medium py-2 px-4 rounded">
+                保存客户
+            </button>
+            <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
+                取消
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

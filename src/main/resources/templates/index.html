@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>美容店管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8b5cf6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f9fafb; }
+        .btn-primary {
+            @apply bg-primary hover:bg-purple-700 text-white font-medium py-2 px-4 rounded transition;
+        }
+    </style>
+</head>
+<body class="font-sans">
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">💅 客户美容店管理系统</h1>
+
+    <!-- 快捷操作 -->
+    <div class="mb-8 flex flex-wrap gap-3">
+        <a href="/customers/new" class="btn-primary">➕ 新增客户</a>
+        <a href="/services/new" class="btn-primary">➕ 新增美容项目</a>
+        <a href="/appointments/new" class="btn-primary">➕ 新增美容登记</a>
+        <a th:href="@{/stats(year=${#temporals.createNow().year}, month=${#temporals.createNow().monthValue})}"
+           class="btn-primary">📊 本月统计</a>
+    </div>
+
+    <!-- 美容记录 -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-xl font-semibold text-gray-700">最近美容记录</h2>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">客户</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额 (¥)</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr th:if="${appointments.empty}">
+                <td colspan="5" class="px-6 py-4 text-center text-gray-500">暂无记录</td>
+            </tr>
+            <tr th:each="a : ${appointments}" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${a.recordId}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${a.customerName} ?: '-'"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${a.serviceName} ?: '-'"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"
+                    th:text="${#temporals.format(a.serviceDate, 'yyyy-MM-dd')}"></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium" th:text="${a.amount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 美容项目列表 -->
+    <div class="mt-8 bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">美容项目列表</h2>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <li th:each="s : ${services}"
+                class="p-4 border border-gray-200 rounded-lg hover:shadow-md transition">
+                <span class="font-medium text-gray-900" th:text="${s.serviceName}"></span>
+                <span class="ml-2 text-green-600 font-semibold">¥<span th:text="${s.price}"></span></span>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

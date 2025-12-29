@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.beautyshop.mapper.AppointmentMapper">
+
+    <resultMap id="AppointmentWithDetailsResultMap" type="com.example.beautyshop.model.Appointment">
+        <id column="record_id" property="recordId"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="service_id" property="serviceId"/>
+        <result column="service_date" property="serviceDate"/>
+        <result column="amount" property="amount"/>
+        <!-- 关联字段 -->
+        <result column="customer_name" property="customerName"/>
+        <result column="service_name" property="serviceName"/>
+    </resultMap>
+
+    <select id="findAllWithDetails" resultMap="AppointmentWithDetailsResultMap">
+        SELECT
+            a.record_id,
+            a.customer_id,
+            a.service_id,
+            a.service_date,
+            a.amount,
+            c.name AS customer_name,
+            s.service_name
+        FROM Appointment a
+                 LEFT JOIN Customer c ON a.customer_id = c.customer_id
+                 LEFT JOIN BeautyService s ON a.service_id = s.service_id
+        ORDER BY a.service_date DESC, a.record_id DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="recordId">
+        INSERT INTO Appointment (customer_id, service_id, service_date, amount)
+        VALUES (#{customerId}, #{serviceId}, #{serviceDate}, #{amount})
+    </insert>
+</mapper>
